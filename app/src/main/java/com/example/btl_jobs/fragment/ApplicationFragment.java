@@ -14,6 +14,7 @@ import com.example.btl_jobs.R;
 import com.example.btl_jobs.adapter.ApplicationAdapter;
 import com.example.btl_jobs.database.DatabaseHelper;
 import com.example.btl_jobs.model.Application;
+import com.example.btl_jobs.utils.SessionManager;
 import java.util.List;
 
 /**
@@ -26,6 +27,8 @@ public class ApplicationFragment extends Fragment {
     private ApplicationAdapter applicationAdapter;
     private List<Application> applicationList;
     private DatabaseHelper dbHelper;
+    private SessionManager sessionManager;
+    private int currentUserId;
 
     @Nullable
     @Override
@@ -33,8 +36,10 @@ public class ApplicationFragment extends Fragment {
                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_application, container, false);
         
-        // Khởi tạo database
+        // Khởi tạo
         dbHelper = new DatabaseHelper(getContext());
+        sessionManager = new SessionManager(getContext());
+        currentUserId = sessionManager.getUserId();
         
         // Ánh xạ views
         initViews(view);
@@ -60,7 +65,7 @@ public class ApplicationFragment extends Fragment {
      * Load danh sách đơn ứng tuyển từ SQLite
      */
     private void loadApplications() {
-        applicationList = dbHelper.getAllApplications();
+        applicationList = dbHelper.getUserApplications(currentUserId);
     }
     
     /**

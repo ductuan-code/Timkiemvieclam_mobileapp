@@ -4,14 +4,19 @@ package com.example.btl_jobs.model;
  * Model class đại diện cho Application (đơn ứng tuyển)
  */
 public class Application {
-    private String id;
-    private String userId;
-    private String jobId;
+    // Status constants
+    public static final String STATUS_PENDING = "Pending";
+    public static final String STATUS_REVIEWING = "Reviewing";
+    public static final String STATUS_ACCEPTED = "Accepted";
+    public static final String STATUS_REJECTED = "Rejected";
+    
+    private int id;
+    private int userId;
+    private int jobId;
     private String jobTitle;
     private String company;
     private String coverLetter;
-    private String cvUrl;
-    private String status; // Pending, Accepted, Rejected
+    private String status; // Pending, Reviewing, Accepted, Rejected
     private long appliedDate;
 
     // Constructor mặc định
@@ -19,41 +24,52 @@ public class Application {
     }
 
     // Constructor đầy đủ
-    public Application(String id, String userId, String jobId, String jobTitle, 
-                      String company, String coverLetter, String cvUrl, String status) {
+    public Application(int id, int userId, int jobId, String jobTitle, 
+                      String company, String coverLetter, String status) {
         this.id = id;
         this.userId = userId;
         this.jobId = jobId;
         this.jobTitle = jobTitle;
         this.company = company;
         this.coverLetter = coverLetter;
-        this.cvUrl = cvUrl;
+        this.status = status;
+        this.appliedDate = System.currentTimeMillis();
+    }
+
+    // Constructor không có id (dùng khi insert mới)
+    public Application(int userId, int jobId, String jobTitle, 
+                      String company, String coverLetter, String status) {
+        this.userId = userId;
+        this.jobId = jobId;
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.coverLetter = coverLetter;
         this.status = status;
         this.appliedDate = System.currentTimeMillis();
     }
 
     // Getters và Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public String getJobId() {
+    public int getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
+    public void setJobId(int jobId) {
         this.jobId = jobId;
     }
 
@@ -79,14 +95,6 @@ public class Application {
 
     public void setCoverLetter(String coverLetter) {
         this.coverLetter = coverLetter;
-    }
-
-    public String getCvUrl() {
-        return cvUrl;
-    }
-
-    public void setCvUrl(String cvUrl) {
-        this.cvUrl = cvUrl;
     }
 
     public String getStatus() {

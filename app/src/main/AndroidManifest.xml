@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light">
         
-        <!-- MainActivity - Màn hình chính -->
+        <!-- LoginActivity - Màn hình đăng nhập (LAUNCHER) -->
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
@@ -22,6 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- RegisterActivity - Màn hình đăng ký -->
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
+        
+        <!-- MainActivity - Màn hình chính -->
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
         
         <!-- JobDetailActivity -->
         <activity

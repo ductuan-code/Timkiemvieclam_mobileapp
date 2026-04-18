@@ -6,14 +6,14 @@ import java.io.Serializable;
  * Model class đại diện cho Job (công việc)
  */
 public class Job implements Serializable {
-    private String id;
+    private int id;
     private String title;
-    private String company;
-    private String companyLogo;
+    private String description;
     private String salary;
     private String location;
     private String type; // Full-time, Part-time, Remote, etc.
-    private String description;
+    private int recruiterId; // ID của recruiter đăng job
+    private String company;
     private String requirements;
     private String benefits;
     private long postedDate;
@@ -24,16 +24,32 @@ public class Job implements Serializable {
     }
 
     // Constructor đầy đủ
-    public Job(String id, String title, String company, String companyLogo, String salary, 
-               String location, String type, String description, String requirements, String benefits) {
+    public Job(int id, String title, String description, String salary, String location, 
+               String type, int recruiterId, String company, String requirements, String benefits) {
         this.id = id;
         this.title = title;
-        this.company = company;
-        this.companyLogo = companyLogo;
+        this.description = description;
         this.salary = salary;
         this.location = location;
         this.type = type;
+        this.recruiterId = recruiterId;
+        this.company = company;
+        this.requirements = requirements;
+        this.benefits = benefits;
+        this.postedDate = System.currentTimeMillis();
+        this.isSaved = false;
+    }
+
+    // Constructor không có id (dùng khi insert mới)
+    public Job(String title, String description, String salary, String location, 
+               String type, int recruiterId, String company, String requirements, String benefits) {
+        this.title = title;
         this.description = description;
+        this.salary = salary;
+        this.location = location;
+        this.type = type;
+        this.recruiterId = recruiterId;
+        this.company = company;
         this.requirements = requirements;
         this.benefits = benefits;
         this.postedDate = System.currentTimeMillis();
@@ -41,11 +57,11 @@ public class Job implements Serializable {
     }
 
     // Getters và Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -57,20 +73,12 @@ public class Job implements Serializable {
         this.title = title;
     }
 
-    public String getCompany() {
-        return company;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getCompanyLogo() {
-        return companyLogo;
-    }
-
-    public void setCompanyLogo(String companyLogo) {
-        this.companyLogo = companyLogo;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getSalary() {
@@ -97,12 +105,20 @@ public class Job implements Serializable {
         this.type = type;
     }
 
-    public String getDescription() {
-        return description;
+    public int getRecruiterId() {
+        return recruiterId;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRecruiterId(int recruiterId) {
+        this.recruiterId = recruiterId;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getRequirements() {

@@ -2,46 +2,51 @@ package com.example.btl_jobs.model;
 
 /**
  * Model class đại diện cho User trong hệ thống
+ * Hỗ trợ 3 roles: user, recruiter, admin
  */
 public class User {
-    private String id;
-    private String email;
+    // Role constants
+    public static final String ROLE_USER = "user";
+    public static final String ROLE_RECRUITER = "recruiter";
+    public static final String ROLE_ADMIN = "admin";
+    
+    private int id;
     private String fullName;
-    private String phone;
-    private String address;
-    private String avatarUrl;
+    private String email;
+    private String password;
+    private String role; // "user" | "recruiter" | "admin"
     private long createdAt;
 
-    // Constructor mặc định (bắt buộc cho Firebase)
+    // Constructor mặc định
     public User() {
     }
 
     // Constructor đầy đủ
-    public User(String id, String email, String fullName, String phone, String address, String avatarUrl) {
+    public User(int id, String fullName, String email, String password, String role) {
         this.id = id;
-        this.email = email;
         this.fullName = fullName;
-        this.phone = phone;
-        this.address = address;
-        this.avatarUrl = avatarUrl;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.createdAt = System.currentTimeMillis();
+    }
+
+    // Constructor không có id (dùng khi insert mới)
+    public User(String fullName, String email, String password, String role) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
         this.createdAt = System.currentTimeMillis();
     }
 
     // Getters và Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFullName() {
@@ -52,28 +57,28 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getRole() {
+        return role;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getCreatedAt() {
@@ -82,5 +87,18 @@ public class User {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Helper methods
+    public boolean isUser() {
+        return ROLE_USER.equals(role);
+    }
+
+    public boolean isRecruiter() {
+        return ROLE_RECRUITER.equals(role);
+    }
+
+    public boolean isAdmin() {
+        return ROLE_ADMIN.equals(role);
     }
 }

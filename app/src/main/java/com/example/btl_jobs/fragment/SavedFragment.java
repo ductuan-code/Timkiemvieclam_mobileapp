@@ -14,6 +14,7 @@ import com.example.btl_jobs.R;
 import com.example.btl_jobs.adapter.JobAdapter;
 import com.example.btl_jobs.database.DatabaseHelper;
 import com.example.btl_jobs.model.Job;
+import com.example.btl_jobs.utils.SessionManager;
 import java.util.List;
 
 /**
@@ -26,6 +27,8 @@ public class SavedFragment extends Fragment implements JobAdapter.OnJobActionLis
     private JobAdapter jobAdapter;
     private List<Job> savedJobList;
     private DatabaseHelper dbHelper;
+    private SessionManager sessionManager;
+    private int currentUserId;
 
     @Nullable
     @Override
@@ -33,8 +36,10 @@ public class SavedFragment extends Fragment implements JobAdapter.OnJobActionLis
                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_saved, container, false);
         
-        // Khởi tạo database
+        // Khởi tạo
         dbHelper = new DatabaseHelper(getContext());
+        sessionManager = new SessionManager(getContext());
+        currentUserId = sessionManager.getUserId();
         
         // Ánh xạ views
         initViews(view);
@@ -60,7 +65,11 @@ public class SavedFragment extends Fragment implements JobAdapter.OnJobActionLis
      * Load danh sách job đã lưu từ SQLite
      */
     private void loadSavedJobs() {
-        savedJobList = dbHelper.getSavedJobs();
+        savedJobList = dbHelper.getSavedJobs(currentUserId);
+        // Đánh dấu tất cả là saved
+        for (Job job : savedJobList) {
+            job.setSaved(true);
+        }
     }
     
     /**
@@ -93,7 +102,7 @@ public class SavedFragment extends Fragment implements JobAdapter.OnJobActionLis
     @Override
     public void onSaveClick(Job job, int position) {
         // Xóa khỏi database
-        dbHelper.unsaveJob(job.getId());
+        dbHelper.unsaveJob(currentUserId, job.getId());
         
         // Xóa khỏi danh sách
         savedJobList.remove(position);

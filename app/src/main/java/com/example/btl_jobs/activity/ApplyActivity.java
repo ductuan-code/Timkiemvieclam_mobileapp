@@ -10,6 +10,7 @@ import com.example.btl_jobs.R;
 import com.example.btl_jobs.database.DatabaseHelper;
 import com.example.btl_jobs.model.Application;
 import com.example.btl_jobs.model.Job;
+import com.example.btl_jobs.utils.SessionManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,6 +27,8 @@ public class ApplyActivity extends AppCompatActivity {
     private TextInputEditText etCoverLetter;
     private MaterialButton btnUploadCV, btnSubmit;
     private DatabaseHelper dbHelper;
+    private SessionManager sessionManager;
+    private int currentUserId;
     private String cvFileName = "";
 
     @Override
@@ -43,8 +46,17 @@ public class ApplyActivity extends AppCompatActivity {
             return;
         }
         
-        // Khởi tạo database
+        // Khởi tạo
         dbHelper = new DatabaseHelper(this);
+        sessionManager = new SessionManager(this);
+        currentUserId = sessionManager.getUserId();
+        
+        // Kiểm tra đã ứng tuyển chưa
+        if (dbHelper.hasApplied(currentUserId, job.getId())) {
+            Toast.makeText(this, "Bạn đã ứng tuyển công việc này rồi!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         
         // Ánh xạ views
         initViews();
@@ -143,19 +155,19 @@ public class ApplyActivity extends AppCompatActivity {
         btnSubmit.setText("Đang gửi...");
         
         // Tạo application
-        Application application = new Application();
-        application.setJobId(job.getId());
-        application.setJobTitle(job.getTitle());
-        application.setCompany(job.getCompany());
-        application.setCoverLetter(coverLetter);
-        application.setCvUrl(cvFileName);
-        application.setStatus("Pending");
-        application.setAppliedDate(System.currentTimeMillis());
+        Application application = new Application(
+            currentUserId,
+            job.getId(),
+            job.getTitle(),
+            job.getCompany(),
+            coverLetter,
+            Application.STATUS_PENDING
+        );
         
         // Lưu vào SQLite
-        boolean success = dbHelper.addApplication(application);
+        long result = dbHelper.applyJob(application);
         
-        if (success) {
+        if (result != -1) {
             Toast.makeText(this, "Gửi đơn ứng tuyển thành công!", Toast.LENGTH_SHORT).show();
             finish();
         } else {

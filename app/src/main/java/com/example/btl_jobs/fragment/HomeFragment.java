@@ -16,8 +16,8 @@ import com.example.btl_jobs.R;
 import com.example.btl_jobs.adapter.JobAdapter;
 import com.example.btl_jobs.database.DatabaseHelper;
 import com.example.btl_jobs.model.Job;
+import com.example.btl_jobs.utils.SessionManager;
 import com.google.android.material.textfield.TextInputEditText;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +31,8 @@ public class HomeFragment extends Fragment implements JobAdapter.OnJobActionList
     private JobAdapter jobAdapter;
     private List<Job> jobList;
     private DatabaseHelper dbHelper;
+    private SessionManager sessionManager;
+    private int currentUserId;
 
     @Nullable
     @Override
@@ -38,8 +40,10 @@ public class HomeFragment extends Fragment implements JobAdapter.OnJobActionList
                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         
-        // Khởi tạo database
+        // Khởi tạo
         dbHelper = new DatabaseHelper(getContext());
+        sessionManager = new SessionManager(getContext());
+        currentUserId = sessionManager.getUserId();
         
         // Ánh xạ views
         initViews(view);
@@ -70,6 +74,10 @@ public class HomeFragment extends Fragment implements JobAdapter.OnJobActionList
      */
     private void loadJobs() {
         jobList = dbHelper.getAllJobs();
+        // Đánh dấu jobs đã saved
+        for (Job job : jobList) {
+            job.setSaved(dbHelper.isJobSaved(currentUserId, job.getId()));
+        }
     }
     
     /**
@@ -99,6 +107,10 @@ public class HomeFragment extends Fragment implements JobAdapter.OnJobActionList
                     jobList = dbHelper.getAllJobs();
                 } else {
                     jobList = dbHelper.searchJobs(query);
+                }
+                // Đánh dấu jobs đã saved
+                for (Job job : jobList) {
+                    job.setSaved(dbHelper.isJobSaved(currentUserId, job.getId()));
                 }
                 jobAdapter = new JobAdapter(getContext(), jobList, HomeFragment.this);
                 rvJobs.setAdapter(jobAdapter);
@@ -131,11 +143,11 @@ public class HomeFragment extends Fragment implements JobAdapter.OnJobActionList
     public void onSaveClick(Job job, int position) {
         if (job.isSaved()) {
             // Unsave
-            dbHelper.unsaveJob(job.getId());
+            dbHelper.unsaveJob(currentUserId, job.getId());
             job.setSaved(false);
         } else {
             // Save
-            dbHelper.saveJob(job.getId());
+            dbHelper.saveJob(currentUserId, job.getId());
             job.setSaved(true);
         }
         

@@ -1,14 +1,16 @@
 # 📱 Job Finder Mobile App
 
+---
+
 ## 📌 1. Giới thiệu đề tài
 
-Trong thời đại công nghệ hiện nay, nhu cầu tìm kiếm việc làm ngày càng cao. Việc xây dựng một ứng dụng mobile hỗ trợ tìm kiếm và quản lý thông tin việc làm là cần thiết.
+Trong bối cảnh nhu cầu tìm kiếm việc làm ngày càng tăng, việc xây dựng một ứng dụng mobile hỗ trợ tìm kiếm và quản lý thông tin tuyển dụng là cần thiết.
 
 Đề tài **Job Finder Mobile App** được xây dựng nhằm:
 
 * Hỗ trợ người dùng tìm kiếm việc làm trên thiết bị di động
-* Giúp quản lý thông tin công việc một cách trực quan
-* Mô phỏng hệ thống tuyển dụng đơn giản
+* Kết nối người tìm việc và nhà tuyển dụng
+* Mô phỏng hệ thống tuyển dụng cơ bản
 
 ---
 
@@ -16,15 +18,17 @@ Trong thời đại công nghệ hiện nay, nhu cầu tìm kiếm việc làm n
 
 ### 🎯 Mục tiêu tổng quát
 
-Xây dựng ứng dụng mobile hỗ trợ tìm kiếm việc làm đơn giản, dễ sử dụng.
+Xây dựng ứng dụng mobile hỗ trợ tìm kiếm và quản lý việc làm một cách đơn giản, hiệu quả.
 
 ### 🎯 Mục tiêu cụ thể
 
 * Hiển thị danh sách việc làm
-* Cho phép tìm kiếm và xem chi tiết job
-* Lưu job yêu thích
+* Tìm kiếm và xem chi tiết công việc
+* Cho phép người dùng đăng ký, đăng nhập
+* Phân quyền người dùng (User / Recruiter / Admin)
+* Lưu công việc yêu thích
 * Ứng tuyển công việc (mô phỏng)
-* Thiết kế database phù hợp
+* Sử dụng database cục bộ để lưu trữ dữ liệu
 
 ---
 
@@ -32,62 +36,118 @@ Xây dựng ứng dụng mobile hỗ trợ tìm kiếm việc làm đơn giản,
 
 ### 👤 User (Người tìm việc)
 
-* Xem danh sách job
-* Tìm kiếm job
+* Đăng ký / đăng nhập
+* Xem danh sách việc làm
+* Tìm kiếm việc làm
 * Xem chi tiết job
 * Lưu job
-* Apply job
+* Ứng tuyển job
+
+---
+
+### 🧑‍💼 Recruiter (Nhà tuyển dụng)
+
+* Đăng ký / đăng nhập
+* Đăng bài tuyển dụng
+* Xóa job
+* Xem danh sách ứng viên
+
+---
+
+### 🛠️ Admin
+
+* Đăng nhập
+* Xem danh sách người dùng
+* Xem tất cả job
+* Xóa job
 
 ---
 
 ## ⚙️ 4. Chức năng hệ thống
 
+### 🔐 Authentication
+
+* Đăng ký (Register)
+* Đăng nhập (Login)
+* Đăng xuất (Logout)
+* Lưu trạng thái đăng nhập (local)
+* Phân quyền theo role
+
+---
+
 ### 👤 User
 
-* Xem danh sách việc làm
-* Tìm kiếm theo từ khóa
-* Xem chi tiết công việc
-* Lưu công việc yêu thích
-* Ứng tuyển (lưu trạng thái)
+* Xem danh sách job
+* Tìm kiếm job theo từ khóa
+* Xem chi tiết job
+* Lưu job yêu thích
+* Ứng tuyển job
+
+---
+
+### 🧑‍💼 Recruiter
+
+* Thêm job
+* Xóa job
+* Xem danh sách ứng viên
+
+---
+
+### 🛠️ Admin
+
+* Xem danh sách user
+* Xem tất cả job
+* Xóa job
 
 ---
 
 ## 🗄️ 5. Database
 
-Hệ thống sử dụng database local (SQLite hoặc JSON).
+Hệ thống sử dụng **SQLite (local database)** để lưu trữ dữ liệu.
+
+---
 
 ### USERS
 
-* id
-* full_name
-* email
+* id (INTEGER, PRIMARY KEY)
+* full_name (TEXT)
+* email (TEXT, UNIQUE)
+* password (TEXT)
+* role (TEXT) → "user" | "recruiter" | "admin"
+
+---
 
 ### JOBS
 
-* id
-* title
-* description
-* salary
-* location
+* id (INTEGER, PRIMARY KEY)
+* title (TEXT)
+* description (TEXT)
+* salary (INTEGER)
+* location (TEXT)
+* recruiter_id (INTEGER)
+
+---
 
 ### APPLICATIONS
 
-* id
-* user_id
-* job_id
-* status
+* id (INTEGER, PRIMARY KEY)
+* user_id (INTEGER)
+* job_id (INTEGER)
+* status (TEXT)
+
+---
 
 ### SAVED_JOBS
 
-* id
-* user_id
-* job_id
+* id (INTEGER, PRIMARY KEY)
+* user_id (INTEGER)
+* job_id (INTEGER)
 
 ---
 
 ## 🏗️ 6. Kiến trúc hệ thống
 
-Mobile App → Local Database (SQLite)
+Mobile App → SQLite Database (Local Storage)
 
 ---
 
@@ -95,22 +155,18 @@ Mobile App → Local Database (SQLite)
 
 ### 📱 Mobile
 
-* React Native / Flutter / Android Kotlin
+- Java (Android)
+- Android Studio
 
 ### 🗄️ Database
 
-* SQLite / Local Storage
+* SQLite
 
 ---
 
 ## ▶️ 8. Hướng dẫn chạy dự án
 
-```bash
-npm install
-npm start
-```
 
----
 
 ## 📁 9. Cấu trúc thư mục
 
@@ -118,7 +174,7 @@ npm start
 project/
 │
 ├── src/            # source code mobile
-├── database/       # file database / mock data
+├── database/       # SQLite / dữ liệu mẫu
 ├── assets/         # hình ảnh
 ├── reports/        # báo cáo
 ├── slides/         # slide
@@ -131,9 +187,9 @@ project/
 
 ## 👨‍💻 10. Tác giả
 
-* Họ tên: Nguyễn Đức Tuấn
-* Mã sinh viên: 12523116
-* Lớp: 12323W.1
+* Họ tên: [Điền tên bạn]
+* Mã sinh viên: [Điền MSSV]
+* Lớp: [Điền lớp]
 
 ---
 
@@ -141,10 +197,10 @@ project/
 
 Ứng dụng giúp:
 
-* Tìm kiếm việc làm nhanh chóng
-* Trải nghiệm mobile đơn giản
-* Làm quen với phát triển ứng dụng mobile và database
+* Tìm kiếm việc làm dễ dàng trên mobile
+* Mô phỏng hệ thống tuyển dụng với nhiều vai trò
+* Thực hành phát triển ứng dụng mobile kết hợp database
 
 ---
 
-🔥 **Dự án tập trung vào phát triển mobile và thiết kế database, phù hợp với môn học cơ bản**
+🔥 **Dự án tập trung vào Mobile + SQLite + Authentication + Role (User / Recruiter / Admin), phù hợp với môn Lập trình Mobile**

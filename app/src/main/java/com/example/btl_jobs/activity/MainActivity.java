@@ -1,12 +1,17 @@
 package com.example.btl_jobs.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import com.example.btl_jobs.R;
 import com.example.btl_jobs.fragment.ApplicationFragment;
 import com.example.btl_jobs.fragment.HomeFragment;
 import com.example.btl_jobs.fragment.SavedFragment;
+import com.example.btl_jobs.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
@@ -16,11 +21,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     
     private BottomNavigationView bottomNavigation;
+    private SessionManager sessionManager;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Kiểm tra đăng nhập
+        sessionManager = new SessionManager(this);
+        if (!sessionManager.isLoggedIn()) {
+            navigateToLogin();
+            return;
+        }
+        
         setContentView(R.layout.activity_main);
+        
+        // Setup Toolbar
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Job Finder");
+            }
+        }
         
         // Ánh xạ views
         bottomNavigation = findViewById(R.id.bottomNavigation);
@@ -32,6 +56,27 @@ public class MainActivity extends AppCompatActivity {
         
         // Xử lý sự kiện Bottom Navigation
         setupBottomNavigation();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        
+        if (id == R.id.action_logout) {
+            handleLogout();
+            return true;
+        } else if (id == R.id.action_profile) {
+            // TODO: Mở màn hình profile
+            return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
     }
     
     /**
@@ -66,5 +111,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Xử lý đăng xuất
+     */
+    private void handleLogout() {
+        sessionManager.logout();
+        navigateToLogin();
+    }
+    
+    /**
+     * Chuyển đến màn hình đăng nhập
+     */
+    private void navigateToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
