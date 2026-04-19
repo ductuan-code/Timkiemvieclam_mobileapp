@@ -11,6 +11,7 @@ import com.example.btl_jobs.R;
 import com.example.btl_jobs.fragment.ApplicationFragment;
 import com.example.btl_jobs.fragment.HomeFragment;
 import com.example.btl_jobs.fragment.SavedFragment;
+import com.example.btl_jobs.model.User;
 import com.example.btl_jobs.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,10 +29,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Kiểm tra đăng nhập
+        // Kiểm tra đăng nhập và role
         sessionManager = new SessionManager(this);
         if (!sessionManager.isLoggedIn()) {
             navigateToLogin();
+            return;
+        }
+        
+        // Chỉ cho phép User vào MainActivity
+        if (!sessionManager.isUser()) {
+            // Nếu là Recruiter hoặc Admin, điều hướng về màn hình của họ
+            navigateByRole();
             return;
         }
         
@@ -126,6 +134,27 @@ public class MainActivity extends AppCompatActivity {
      */
     private void navigateToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+    
+    /**
+     * Điều hướng theo role
+     */
+    private void navigateByRole() {
+        Intent intent;
+        String role = sessionManager.getUserRole();
+        
+        if (User.ROLE_RECRUITER.equals(role)) {
+            intent = new Intent(this, RecruiterDashboardActivity.class);
+        } else if (User.ROLE_ADMIN.equals(role)) {
+            intent = new Intent(this, AdminDashboardActivity.class);
+        } else {
+            // Không phải User role, về login
+            intent = new Intent(this, LoginActivity.class);
+        }
+        
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

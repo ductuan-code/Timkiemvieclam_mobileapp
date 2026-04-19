@@ -46,6 +46,24 @@
             android:name=".activity.ApplyActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.Light" />
+        
+        <!-- RecruiterDashboardActivity -->
+        <activity
+            android:name=".activity.RecruiterDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
+        
+        <!-- AddJobActivity -->
+        <activity
+            android:name=".activity.AddJobActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
+        
+        <!-- AdminDashboardActivity -->
+        <activity
+            android:name=".activity.AdminDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Light.NoActionBar" />
             
     </application>
 

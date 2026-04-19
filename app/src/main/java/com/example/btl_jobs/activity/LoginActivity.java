@@ -85,11 +85,33 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Đăng nhập thành công! Xin chào " + user.getFullName(), 
                     Toast.LENGTH_SHORT).show();
             
-            navigateToMain();
+            // Điều hướng theo role
+            navigateByRole(user.getRole());
         } else {
             Toast.makeText(this, "Email hoặc mật khẩu không đúng!", 
                     Toast.LENGTH_SHORT).show();
         }
+    }
+    
+    private void navigateByRole(String role) {
+        Intent intent;
+        
+        switch (role) {
+            case User.ROLE_ADMIN:
+                intent = new Intent(this, AdminDashboardActivity.class);
+                break;
+            case User.ROLE_RECRUITER:
+                intent = new Intent(this, RecruiterDashboardActivity.class);
+                break;
+            case User.ROLE_USER:
+            default:
+                intent = new Intent(this, MainActivity.class);
+                break;
+        }
+        
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
     
     private void navigateToRegister() {
